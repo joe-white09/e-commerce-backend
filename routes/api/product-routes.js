@@ -12,11 +12,8 @@ router.get('/', (req, res) => {
       },
       {
         model: Tag,
-        attributes: ['tag_name'],
         through: ProductTag,
-        attributes: ['tag_name'],
-        as: 'tagged_product'
-        
+        as: 'tags'
       }
     ]
   })
@@ -25,7 +22,6 @@ router.get('/', (req, res) => {
     console.log(err);
     res.status(500).json(err);
   });
-  // be sure to include its associated Category and Tag data
 });
 
 // get one product
@@ -34,7 +30,17 @@ router.get('/:id', (req, res) => {
   Product.findOne({
     where: {
       id: req.params.id
-    }
+    },
+    include: [
+      {
+        model: Category
+      },
+      {
+        model: Tag,
+        through: ProductTag,
+        as: 'tags'
+      }
+    ]
   })
   .then(dbProductData => {
     if (!dbProductData) {
@@ -47,7 +53,6 @@ router.get('/:id', (req, res) => {
     console.log(err);
     res.status(500).json(err);
   });
-  // be sure to include its associated Category and Tag data
 });
 
 // create new product
