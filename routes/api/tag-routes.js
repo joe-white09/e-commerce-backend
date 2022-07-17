@@ -17,13 +17,18 @@ router.get('/', (req, res) => {
     console.log(err);
     res.status(500).json(err);
   });
-  // be sure to include its associated Product data
 });
 
 router.get('/:id', (req, res) => {
   Tag.findOne({
     where: {
       id: req.params.id
+    },
+    include: {
+      model: Product,
+      through: ProductTag,
+      as: 'products'
+      
     }
   })
   .then(dbTagData => {
@@ -37,7 +42,6 @@ router.get('/:id', (req, res) => {
     console.log(err);
     res.status(500).json(err);
   });
-  // be sure to include its associated Product data
 });
 
 router.post('/', (req, res) => {
